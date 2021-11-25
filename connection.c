@@ -25,5 +25,5 @@ char* connectString(Dictionary* dic, int dic_idx, char* string)
 		if(!(strcmp(dic->wdic[dic_idx].voc[i].string, string) {
 			return dic->wdic[dic_idx].voc[i].string;
 
-	return -1;
+	return NULL;
 }
