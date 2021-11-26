@@ -123,7 +123,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="connection.c" />
+    <ClCompile Include="dictionary.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="wordDict.c" />
+    <ClCompile Include="wordList.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dictionary.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
