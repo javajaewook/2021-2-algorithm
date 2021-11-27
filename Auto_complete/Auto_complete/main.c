@@ -28,6 +28,7 @@ int main(void)
     wordList* wl = WLCreate();
 
     int start = 0;    // 첫 Dictionary 요소 구분
+    bool firstWord = false;    // 문장 첫 요소 구분
     char* string;
     int pre_idx = -1;    // 이전 단어 index
     int idx = 0;    // 입력한 단어의 index
@@ -44,6 +45,12 @@ int main(void)
         if (!strcmp(string, "_exit"))
             break;
 
+        if (!strcmp(string, "<eos>")) {
+            pre_idx = -1;
+            firstWord = true;
+            continue;
+        }
+
         idx = InputToWL(wl, string);    // 입력한 단어를 wordList에 추가
         DicAdd(dic, string, idx, pre_idx, start);    // 입력한 단어에 대해 Dictionary 추가 및 connect_count 갱신
 
@@ -53,27 +60,42 @@ int main(void)
         // 이전 단어 index 갱신
         pre_idx = idx;
         
+        firstWord = false;
+
         start += 1;
     } while (true);
 
-    printf("입력 종료\n\n\n\n");
+    printf("\n\n===입력 종료===\n\n\n");
+    printf("=======================================================================\n\n");
 
     printf("WordList\n\n");
     for (int idx = 0; idx < wl->count; idx++) {
-        printf("%s\n", wl->stringList[idx]);
+        printf("[%d] : %s\n", idx, wl->stringList[idx]);
     }
 
-    printf("\n\n\n\n");
+    printf("\n\n==================================================================\n\n");
 
     printf("Dictionary\n\n");
     for (int i = 0; i < dic->count; i++) {
-        printf("Dic word : %s\n", wl->stringList[i]);
+        printf("[%d] : %s - ", i, wl->stringList[i]);;
+
+        if (dic->wdic[i].count == 0)
+            printf("\n");
+
         for (int j = 0; j < dic->wdic[i].count; j++) {
-            printf("connect_string : %s\n", dic->wdic[i].voc[j].string);
-            printf("connect_count : %d\n", dic->wdic[i].voc[j].connect);
-            printf("\n\n");
+            if (j == 0) {
+                if (j == dic->wdic[i].count - 1)
+                    printf("(%s, %d)\n", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
+                else
+                    printf("(%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
+            }
+
+            else if (j == dic->wdic[i].count - 1)
+                printf("%s, %d)\n", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
+
+            else
+                printf("%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
         }
     }
-
     return 1;
 }
