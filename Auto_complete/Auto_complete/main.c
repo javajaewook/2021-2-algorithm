@@ -23,7 +23,14 @@ int InputToWL(wordList* wl, char* string)
 }
 
 int main(void)
-{
+{    
+    int txtSize;
+    int count;
+    char inputTXT[100];
+    // char txtBuffer[100];
+
+    FILE* fp = fopen("sentence.txt", "r");
+
     Dictionary* dic = DicCreate();
     wordList* wl = WLCreate();
 
@@ -39,7 +46,9 @@ int main(void)
     do {
         // 단어 최대 길이 99
         string = (char*)malloc(sizeof(char) * 100);
-        scanf("%s", string);
+
+        fscanf(fp, "%s", string);
+        // scanf("%s", string);
 
         // "_exit" 입력 시 입력 종료
         if (!strcmp(string, "_exit"))
@@ -59,11 +68,14 @@ int main(void)
 
         // 이전 단어 index 갱신
         pre_idx = idx;
-        
-        firstWord = false;
+
+        if (!strcmp(string, "<eos>"))
+            pre_idx = -1;
 
         start += 1;
     } while (true);
+
+    fclose(fp);
 
     printf("\n\n===입력 종료===\n\n\n");
     printf("=======================================================================\n\n");
@@ -97,5 +109,5 @@ int main(void)
                 printf("%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
         }
     }
-    return 1;
+    return 0;
 }
