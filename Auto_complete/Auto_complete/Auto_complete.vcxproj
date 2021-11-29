@@ -76,6 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,6 +126,7 @@
   <ItemGroup>
     <ClCompile Include="connection.c" />
     <ClCompile Include="dictionary.c" />
+    <ClCompile Include="generator.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="wordDict.c" />
     <ClCompile Include="wordList.c" />

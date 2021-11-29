@@ -4,11 +4,10 @@
 int searchWL(wordList* wl, char* string)
 {
 	for (int idx = 0; idx < wl->count; idx++) {
-		if (!(strcmp(wl->stringList[idx], string)))
+		if (strcmp(wl->stringList[idx], string) == 0)
 			return idx;
-
-		return -1;
 	}
+	return -1;
 }
 
 // 지정한 문자열에 대한 입력한 문자열의 connection count 반환

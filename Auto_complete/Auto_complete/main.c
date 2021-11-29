@@ -2,13 +2,15 @@
 
 #include "dictionary.h"
 
+extern void generate_sent(Dictionary* dic, wordList* wl, char* start_word, int max_length);
+
 /*
-Dictionary : word dictionaryë¥¼ ë‹´ì€ ë™ì  êµ¬ì¡°ì²´ ë°°ì—´
-wordDict : ì—°ê²°ëœ Vocabë“¤ì„ ë‹´ì€ ë™ì  êµ¬ì¡°ì²´ ë°°ì—´
-wordList : ì…ë ¥ëœ ë‹¨ì–´ë“¤ì˜ ëª©ë¡
+Dictionary : word dictionary¸¦ ´ãÀº µ¿Àû ±¸Á¶Ã¼ ¹è¿­
+wordDict : ¿¬°áµÈ VocabµéÀ» ´ãÀº µ¿Àû ±¸Á¶Ã¼ ¹è¿­
+wordList : ÀÔ·ÂµÈ ´Ü¾îµéÀÇ ¸ñ·Ï
 */
 
-// wordListì— ë‹¨ì–´ ì…ë ¥
+// wordList¿¡ ´Ü¾î ÀÔ·Â
 int InputToWL(wordList* wl, char* string)
 {
     int idx = 0;
@@ -16,93 +18,93 @@ int InputToWL(wordList* wl, char* string)
     idx = WLAdd(wl, string);
 
     if (idx == -1) {
-        printf("WordList ì…ë ¥ ì‹¤íŒ¨\n");
+        printf("WordList ÀÔ·Â ½ÇÆĞ\n");
         return idx;
     }
-    return idx;    // ì…ë ¥ëœ ë‹¨ì–´ì— í• ë‹¹í•œ index ë°˜í™˜
+    return idx;    // ÀÔ·ÂµÈ ´Ü¾î¿¡ ÇÒ´çÇÑ index ¹İÈ¯
 }
 
 int main(void)
-{    
-    int txtSize;
-    int count;
-    char inputTXT[100];
-    // char txtBuffer[100];
+{
+	int txtSize;
+	int count;
+	char inputTXT[100];
+	// char txtBuffer[100];
 
-    FILE* fp = fopen("sentence.txt", "r");
+	FILE* fp = fopen("sentence.txt", "r");
 
-    Dictionary* dic = DicCreate();
-    wordList* wl = WLCreate();
+	Dictionary* dic = DicCreate();
+	wordList* wl = WLCreate();
 
-    int start = 0;    // ì²« Dictionary ìš”ì†Œ êµ¬ë¶„
-    bool firstWord = false;    // ë¬¸ì¥ ì²« ìš”ì†Œ êµ¬ë¶„
-    char* string;
-    int pre_idx = -1;    // ì´ì „ ë‹¨ì–´ index
-    int idx = 0;    // ì…ë ¥í•œ ë‹¨ì–´ì˜ index
+	int start = 0;    // Ã¹ Dictionary ¿ä¼Ò ±¸ºĞ
+	bool firstWord = false;    // ¹®Àå Ã¹ ¿ä¼Ò ±¸ºĞ
+	char* string;
+	int pre_idx = -1;    // ÀÌÀü ´Ü¾î index
+	int idx = 0;    // ÀÔ·ÂÇÑ ´Ü¾îÀÇ index
 
-    if (dic == NULL)
-        return 0;
+	if (dic == NULL)
+		return 0;
 
-    do {
-        // ë‹¨ì–´ ìµœëŒ€ ê¸¸ì´ 99
-        string = (char*)malloc(sizeof(char) * 100);
+	do {
+		// ´Ü¾î ÃÖ´ë ±æÀÌ 99
+		string = (char*)malloc(sizeof(char) * 100);
 
-        fscanf(fp, "%s", string);
-        // scanf("%s", string);
+		fscanf(fp, "%s", string);
+		// scanf("%s", string);
 
-        // "_exit" ì…ë ¥ ì‹œ ì…ë ¥ ì¢…ë£Œ
-        if (!strcmp(string, "_exit"))
-            break;
+		// "_exit" ÀÔ·Â ½Ã ÀÔ·Â Á¾·á
+		if (!strcmp(string, "_exit"))
+			break;
 
-        idx = InputToWL(wl, string);    // ì…ë ¥í•œ ë‹¨ì–´ë¥¼ wordListì— ì¶”ê°€
-        DicAdd(dic, string, idx, pre_idx, start);    // ì…ë ¥í•œ ë‹¨ì–´ì— ëŒ€í•´ Dictionary ì¶”ê°€ ë° connect_count ê°±ì‹ 
+		idx = InputToWL(wl, string);    // ÀÔ·ÂÇÑ ´Ü¾î¸¦ wordList¿¡ Ãß°¡
+		DicAdd(dic, string, idx, pre_idx, start);    // ÀÔ·ÂÇÑ ´Ü¾î¿¡ ´ëÇØ Dictionary Ãß°¡ ¹× connect_count °»½Å
 
-        if (idx == -1)
-            return 0;
+		if (idx == -1)
+			return 0;
 
-        // ì´ì „ ë‹¨ì–´ index ê°±ì‹ 
-        pre_idx = idx;
+		// ÀÌÀü ´Ü¾î index °»½Å
+		pre_idx = idx;
 
-        if (!strcmp(string, "<eos>"))
-            pre_idx = -1;
+		if (!strcmp(string, "<eos>"))
+			pre_idx = -1;
 
-        start += 1;
-    } while (true);
+		start += 1;
+	} while (true);
 
-    fclose(fp);
+	fclose(fp);
 
-    printf("\n\n===ì…ë ¥ ì¢…ë£Œ===\n\n\n");
-    printf("=======================================================================\n\n");
+	printf("\n\n===ÀÔ·Â Á¾·á===\n\n\n");
+	printf("=======================================================================\n\n");
 
-    printf("WordList\n\n");
-    for (int idx = 0; idx < wl->count; idx++) {
-        printf("[%d] : %s\n", idx, wl->stringList[idx]);
-    }
+	printf("WordList\n\n");
+	for (int idx = 0; idx < wl->count; idx++) {
+		printf("[%d] : %s\n", idx, wl->stringList[idx]);
+	}
 
-    printf("\n\n==================================================================\n\n");
+	printf("\n\n==================================================================\n\n");
 
-    printf("Dictionary\n\n");
-    for (int i = 0; i < dic->count; i++) {
-        printf("[%d] : %s - ", i, wl->stringList[i]);;
+	printf("Dictionary\n\n");
+	for (int i = 0; i < dic->count; i++) {
+		printf("[%d] : %s - ", i, wl->stringList[i]);;
 
-        if (dic->wdic[i].count == 0)
-            printf("\n");
+		if (dic->wdic[i].count == 0)
+			printf("\n");
 
-        for (int j = 0; j < dic->wdic[i].count; j++) {
-            if (j == 0) {
-                if (j == dic->wdic[i].count - 1)
-                    printf("(%s, %d)\n", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
-                else
-                    printf("(%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
-            }
+		for (int j = 0; j < dic->wdic[i].count; j++) {
+			if (j == 0) {
+				if (j == dic->wdic[i].count - 1)
+					printf("(%s, %d)\n", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
+				else
+					printf("(%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
+			}
 
-            else if (j == dic->wdic[i].count - 1)
-                printf("%s, %d)\n", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
+			else if (j == dic->wdic[i].count - 1)
+				printf("%s, %d)\n", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
 
-            else
-                printf("%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
-        }
-    }
- 
+			else
+				printf("%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
+		}
+	}
+	generate_sent(dic, wl, "ÇÏ³ª", 10);
     return 0;
 }
