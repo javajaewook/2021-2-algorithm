@@ -54,12 +54,6 @@ int main(void)
         if (!strcmp(string, "_exit"))
             break;
 
-        if (!strcmp(string, "<eos>")) {
-            pre_idx = -1;
-            firstWord = true;
-            continue;
-        }
-
         idx = InputToWL(wl, string);    // 입력한 단어를 wordList에 추가
         DicAdd(dic, string, idx, pre_idx, start);    // 입력한 단어에 대해 Dictionary 추가 및 connect_count 갱신
 
@@ -109,5 +103,6 @@ int main(void)
                 printf("%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
         }
     }
+ 
     return 0;
 }
