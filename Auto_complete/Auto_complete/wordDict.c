@@ -7,7 +7,7 @@ void searchWD(wordDict* wd, char* value)
 {
     if (wd->count != 0 && wd->count % wd->size == 0) {
         wd->size += INCREMENT_SIZE;
-        wd->voc = (Vocab*)realloc(wd->voc, sizeof(Vocab*) * wd->size);
+        wd->voc = (Vocab*)realloc(wd->voc, sizeof(Vocab) * wd->size);
     }
 
     // 이전 단어 목록을 탐색
