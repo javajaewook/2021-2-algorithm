@@ -2,7 +2,9 @@
 #include "dictionary.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <math.h>
+#include <stdlib.h>
 
 void quick_sort(int* idx, int* cnt, int start, int end) {
 	int pivot = start;
@@ -67,35 +69,113 @@ float* softmax(int* input, int len) { // softmax 계산
 	return smax;
 }
 
-int* temparature(int* cnt, int len) {
-	int sum = 0;
-	int i;
-	int* cum_sum = (int*)malloc(sizeof(int) * len);
-
-	for (i = 0; i <= len; i++) {
-		sum += cnt[i];
+int nucleus_sampling(int* cnt, int* idx, int len, float p_value) { // select word with nucleus sampling
+	float* smax;
+	int i, random_val;
+	float* cum_sum = (float*)malloc(sizeof(float) * len);
+	for (i = 0; i < len; i++) {
+		cum_sum[i] = 0; // initialize
 	}
+	smax = softmax(cnt, len); // get softmax value
+	cum_sum[len - 1] = smax[len - 1];
+	for (i = len - 1; i > 0; i--) {
+		cum_sum[i - 1] = cum_sum[i] + smax[i - 1];
+	}
+	for (i = 0; i < len;) {
+		i++;
+		if (cum_sum[i] < p_value) break;
+	}
+	srand((unsigned int)time(NULL)); // for complete random
+
+	free(smax);
+	free(cum_sum);
+	return idx[rand() % i];
 }
 
 void generate_sent(Dictionary* dic, wordList* wl, char* start_word, int max_length) {
-	int i;
-	int cur_idx; 
-	int* word_cnt; int* word_idx;
+	int i, iter;
+	int cur_idx, target_idx; 
+	int* word_cnt; 
+	int* word_idx;
 	char* temp_word;
 	wordDict cur_WD;
 
-	cur_idx = searchWL(wl, start_word); // 단어의 인덱스 찾기
-	cur_WD = dic->wdic[cur_idx]; // 현재 단어의 word dictionary
-	
-	word_cnt = (int*)malloc(sizeof(int) * cur_WD.count);
-	word_idx = (int*)malloc(sizeof(int) * cur_WD.count);
+	iter = 1;
+	printf("\ngenerated sentence: %s ", start_word);
+	temp_word = start_word;
 
-	for (i = 0; i < cur_WD.count; i++) {
-		word_cnt[i] = cur_WD.voc[i].connect;
-		temp_word = cur_WD.voc[i].string;
-		word_idx[i] = searchWL(wl, temp_word);
+	// 생성 시작
+	while (iter <= max_length) {
+		cur_idx = searchWL(wl, temp_word); // 단어의 인덱스 찾기
+		cur_WD = dic->wdic[cur_idx]; // 현재 단어의 word dictionary
+
+		word_cnt = (int*)malloc(sizeof(int) * cur_WD.count);
+		word_idx = (int*)malloc(sizeof(int) * cur_WD.count);
+
+		for (i = 0; i < cur_WD.count; i++) {
+			word_cnt[i] = cur_WD.voc[i].connect;
+			temp_word = cur_WD.voc[i].string;
+			word_idx[i] = searchWL(wl, temp_word);
+		}
+
+		// 단어 등장 횟수의 내림차순으로 정렬
+		quick_sort(word_idx, word_cnt, 0, cur_WD.count - 1);
+
+		// 누적 확률이 p_value 이상인 단어 중 랜덤으로 선택
+		cur_idx = nucleus_sampling(word_cnt, word_idx, cur_WD.count, 0.2);
+		cur_WD = dic->wdic[cur_idx];
+
+		temp_word = wl->stringList[cur_idx];
+
+		// 선택된 단어가 eos 토큰이면 생성 종료
+		if (strcmp("<eos>", temp_word) == 0) {
+			// 생성 종료
+			break;
+		}
+		else printf("%s ", temp_word);
 	}
+}
 
-	quick_sort(word_idx, word_cnt, 0, cur_WD.count - 1);
+void generate_sent_greedy(Dictionary* dic, wordList* wl, char* start_word, int max_length) {
+	int i, iter;
+	int cur_idx, target_idx;
+	int* word_cnt;
+	int* word_idx;
+	char* temp_word;
+	wordDict cur_WD;
 
+	iter = 1;
+	printf("\ngenerated sentence: %s ", start_word);
+	temp_word = start_word;
+
+	// 생성 시작
+	while (iter <= max_length) {
+		cur_idx = searchWL(wl, temp_word); // 단어의 인덱스 찾기
+		cur_WD = dic->wdic[cur_idx]; // 현재 단어의 word dictionary
+
+		word_cnt = (int*)malloc(sizeof(int) * cur_WD.count);
+		word_idx = (int*)malloc(sizeof(int) * cur_WD.count);
+
+		for (i = 0; i < cur_WD.count; i++) {
+			word_cnt[i] = cur_WD.voc[i].connect;
+			temp_word = cur_WD.voc[i].string;
+			word_idx[i] = searchWL(wl, temp_word);
+		}
+
+		// 단어 등장 횟수의 내림차순으로 정렬
+		quick_sort(word_idx, word_cnt, 0, cur_WD.count - 1);
+
+		// 누적 확률이 p_value 이상인 단어 중 랜덤으로 선택
+		cur_idx = word_idx[0];
+		cur_WD = dic->wdic[cur_idx];
+
+		temp_word = wl->stringList[cur_idx];
+
+		// 선택된 단어가 eos 토큰이면 생성 종료
+		if (strcmp("<eos>", temp_word) == 0) {
+			// 생성 종료
+			break;
+		}
+		else printf("%s ", temp_word);
+	}
 }

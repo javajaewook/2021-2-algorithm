@@ -2,7 +2,7 @@
 
 #define INCREMENT_SIZE 5
 
-// wordList ì´ˆê¸°í™”
+// wordList ÃÊ±âÈ­
 void initWD(wordDict* wd)
 {
     Vocab* pvoc = (Vocab*)malloc(sizeof(Vocab) * INCREMENT_SIZE);
@@ -12,7 +12,7 @@ void initWD(wordDict* wd)
     wd->size = INCREMENT_SIZE;
 }
 
-// Dictionary ìƒì„±
+// Dictionary »ı¼º
 Dictionary* DicCreate()
 {
     Dictionary* dic = (Dictionary*)malloc(sizeof(Dictionary));
@@ -31,7 +31,7 @@ Dictionary* DicCreate()
     return dic;
 }
 
-// Dictionaryì— ë‹¨ì–´ ì¶”ê°€
+// Dictionary¿¡ ´Ü¾î Ãß°¡
 bool DicAdd(Dictionary* dic, char* value, int idx, int pre_idx, int start)
 {
     if (dic == NULL)
@@ -48,19 +48,19 @@ bool DicAdd(Dictionary* dic, char* value, int idx, int pre_idx, int start)
     if (dic->wdic == NULL)
         return false;
 
-    // ë‹¨ì–´ê°€ ì´ë¯¸ Dictionaryì— ìˆëŠ” ê²½ìš°
+	// ´Ü¾î°¡ ÀÌ¹Ì Dictionary¿¡ ÀÖ´Â °æ¿ì
     if (start != 0 && idx <= dic->count - 1) {
-        // ì´ì „ ë‹¨ì–´ê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš°
+		// ÀÌÀü ´Ü¾î°¡ Á¸ÀçÇÏ´Â °æ¿ì
         if (pre_idx != -1) {
             searchWD(&(dic->wdic[pre_idx]), value);
         }
         return true;
     }
 
-    // ë‹¨ì–´ê°€ Dictionaryì— ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê²½ìš°
+	// ´Ü¾î°¡ Dictionary¿¡ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì
     else {
-        dic->count++;    // Dictionaryì— ë‹¨ì–´ ì¶”ê°€
-        // ì´ì „ ë‹¨ì–´ê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš°
+        dic->count++;    // Dictionary¿¡ ´Ü¾î Ãß°¡
+		// ÀÌÀü ´Ü¾î°¡ Á¸ÀçÇÏ´Â °æ¿ì
         if (pre_idx != -1) {
             searchWD(&(dic->wdic[pre_idx]), value);
         }

@@ -1,6 +1,6 @@
 #include "dictionary.h"
 
-// í˜„ì¬ ë¬¸ìì—´ì˜ dictionary index ë°˜í™˜
+// ÇöÀç ¹®ÀÚ¿­ÀÇ dictionary index ¹İÈ¯
 int searchWL(wordList* wl, char* string)
 {
 	for (int idx = 0; idx < wl->count; idx++) {
@@ -10,7 +10,7 @@ int searchWL(wordList* wl, char* string)
 	return -1;
 }
 
-// ì§€ì •í•œ ë¬¸ìì—´ì— ëŒ€í•œ ì…ë ¥í•œ ë¬¸ìì—´ì˜ connection count ë°˜í™˜
+// ÁöÁ¤ÇÑ ¹®ÀÚ¿­¿¡ ´ëÇÑ ÀÔ·ÂÇÑ ¹®ÀÚ¿­ÀÇ connection count ¹İÈ¯
 int connectCount(Dictionary* dic, int dic_idx, char* string)
 {
 	for (int i = 0; i < dic->wdic[dic_idx].count; i++) {
@@ -21,7 +21,7 @@ int connectCount(Dictionary* dic, int dic_idx, char* string)
 	}
 }
 
-// ì§€ì •í•œ ë¬¸ìì—´ì— ëŒ€í•œ ì…ë ¥í•œ ë¬¸ìì—´ì˜ connection string ë°˜í™˜
+// ÁöÁ¤ÇÑ ¹®ÀÚ¿­¿¡ ´ëÇÑ ÀÔ·ÂÇÑ ¹®ÀÚ¿­ÀÇ connection string ¹İÈ¯
 char* connectString(Dictionary* dic, int dic_idx, char* string)
 {
 	for (int i = 0; i < dic->wdic[dic_idx].count; i++) {

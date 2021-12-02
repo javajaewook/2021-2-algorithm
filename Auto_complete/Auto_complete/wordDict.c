@@ -2,7 +2,7 @@
 
 #define INCREMENT_SIZE 5
 
-// wordDictì—ì„œ ì´ì „ ë‹¨ì–´ íƒìƒ‰ í›„ connect_count ê°±ì‹ 
+// wordDict¿¡¼­ ÀÌÀü ´Ü¾î Å½»ö ÈÄ connect_count °»½Å
 void searchWD(wordDict* wd, char* value)
 {
     if (wd->count != 0 && wd->count % wd->size == 0) {
@@ -10,16 +10,16 @@ void searchWD(wordDict* wd, char* value)
         wd->voc = (Vocab*)realloc(wd->voc, sizeof(Vocab) * wd->size);
     }
 
-    // ì´ì „ ë‹¨ì–´ ëª©ë¡ì„ íƒìƒ‰
+    // ÀÌÀü ´Ü¾î ¸ñ·ÏÀ» Å½»ö
     for (int i = 0; i < wd->count; i++) {
-        // í˜„ìž¬ ë‹¨ì–´ê°€ wordDictì— ì¡´ìž¬í•˜ëŠ” ê²½ìš°
+        // ÇöÀç ´Ü¾î°¡ wordDict¿¡ Á¸ÀçÇÏ´Â °æ¿ì
         if (!(strcmp(wd->voc[i].string, value))) {
-            wd->voc[i].connect++;    // connect_count ê°±ì‹ 
+            wd->voc[i].connect++;    // connect_count °»½Å
             return true;
         }
     }
 
-    // í˜„ìž¬ ë‹¨ì–´ê°€ wordDictì— ì—†ëŠ” ê²½ìš° ì¶”ê°€
+	// ÇöÀç ´Ü¾î°¡ wordDict¿¡ ¾ø´Â °æ¿ì Ãß°¡
     wd->voc[wd->count].string = value;
     wd->voc[wd->count].connect = 1;
     wd->count++;

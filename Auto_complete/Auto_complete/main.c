@@ -105,6 +105,6 @@ int main(void)
 				printf("%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
 		}
 	}
-	generate_sent(dic, wl, "ÇÏ³ª", 10);
+	generate_sent(dic, wl, "one", 10);
     return 0;
 }
