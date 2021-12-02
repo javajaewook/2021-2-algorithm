@@ -1,6 +1,0 @@
-one two three Ya! <eos>
-one two three Ya! <eos>
-one three four Ya! <eos>
-one two four Ya! <eos>
-one two five Ya! <eos>
-_exit

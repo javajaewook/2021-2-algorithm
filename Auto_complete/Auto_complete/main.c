@@ -31,7 +31,7 @@ int main(void)
 	char inputTXT[100];
 	// char txtBuffer[100];
 
-	FILE* fp = fopen("sentence.txt", "r");
+	FILE* fp = fopen("amazon_text.txt", "r");
 
 	Dictionary* dic = DicCreate();
 	wordList* wl = WLCreate();
@@ -105,6 +105,7 @@ int main(void)
 				printf("%s, %d / ", dic->wdic[i].voc[j].string, dic->wdic[i].voc[j].connect);
 		}
 	}
-	generate_sent(dic, wl, "one", 10);
+
+	generate_sent(dic, wl, "I", 10);
     return 0;
 }

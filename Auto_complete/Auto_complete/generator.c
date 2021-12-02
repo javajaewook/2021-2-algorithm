@@ -105,7 +105,7 @@ void generate_sent(Dictionary* dic, wordList* wl, char* start_word, int max_leng
 	temp_word = start_word;
 
 	// 생성 시작
-	while (iter <= max_length) {
+	while (iter++ <= max_length) {
 		cur_idx = searchWL(wl, temp_word); // 단어의 인덱스 찾기
 		cur_WD = dic->wdic[cur_idx]; // 현재 단어의 word dictionary
 
@@ -122,7 +122,7 @@ void generate_sent(Dictionary* dic, wordList* wl, char* start_word, int max_leng
 		quick_sort(word_idx, word_cnt, 0, cur_WD.count - 1);
 
 		// 누적 확률이 p_value 이상인 단어 중 랜덤으로 선택
-		cur_idx = nucleus_sampling(word_cnt, word_idx, cur_WD.count, 0.2);
+		cur_idx = nucleus_sampling(word_cnt, word_idx, cur_WD.count, 0.0);
 		cur_WD = dic->wdic[cur_idx];
 
 		temp_word = wl->stringList[cur_idx];
@@ -149,7 +149,7 @@ void generate_sent_greedy(Dictionary* dic, wordList* wl, char* start_word, int m
 	temp_word = start_word;
 
 	// 생성 시작
-	while (iter <= max_length) {
+	while (iter++ <= max_length) {
 		cur_idx = searchWL(wl, temp_word); // 단어의 인덱스 찾기
 		cur_WD = dic->wdic[cur_idx]; // 현재 단어의 word dictionary
 
@@ -165,7 +165,7 @@ void generate_sent_greedy(Dictionary* dic, wordList* wl, char* start_word, int m
 		// 단어 등장 횟수의 내림차순으로 정렬
 		quick_sort(word_idx, word_cnt, 0, cur_WD.count - 1);
 
-		// 누적 확률이 p_value 이상인 단어 중 랜덤으로 선택
+		// 등장 횟수가 가장 많은 단어 greedy하게 선택
 		cur_idx = word_idx[0];
 		cur_WD = dic->wdic[cur_idx];
 
